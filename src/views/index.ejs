@@ -1,0 +1,66 @@
+<% include partials/_header %>
+
+    <% include partials/_navs %>
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="/nueva-tarea" method="POST">
+
+                            <div class="form-group">
+                                <input class="form-control" name="title" type="text" id="tituloTarea" placeholder="Introduzca el título" />
+                            </div>
+
+                            <div class="form-group">
+                                <textarea class="form-control" name="description" id="descripcionTarea" type="text" placeholder="Introduzca la descripción"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block" title="Agregar nueva tarea">Nueva
+                                Tarea</button>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Título</th>
+                                    <th scope="col">Descripción</th>
+                                    <th scope="col">Operación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for (var i = 0; i < tasks.length; i++) { %>
+                                    <tr>
+                                        <th scope="row"><%= i + 1;%></th>
+                                        <td><%= tasks[i].title;%></td>
+                                        <td><%= tasks[i].description;%></td>
+                                        <td>
+                                            <a href="/confirmar/<%= tasks[i]._id;%>" class="btn btn-<%= (tasks[i].status) ? 'success' : 'dark' %>" title="Cambiar estado de la Tarea">Confirmar</a>
+                                            <a href="/eliminar/<%= tasks[i]._id;%>" class="btn btn-danger" title="Eliminar Tarea">Eliminar</a>
+                                            <a href="/editar/<%= tasks[i]._id;%>" class="btn btn-info" title="Editar Tarea">Editar</a>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+<% include partials/_footer %>
