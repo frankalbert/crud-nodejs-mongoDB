@@ -5,48 +5,43 @@ const Tasks = require('../models/task');
 
 routes.get('/', async (req, res) => {
     const tasks = await Tasks.find();
+    const ID = await Tasks.findById(req.query.ID)
+    if(req.originalUrl !== '/'){
+        var nuevo = false;
+    }else{
+        var nuevo = true;
+    }
     res.render('index', {
-        title: 'Bievenidos a mi CRUD',
-        tasks
+        title: 'CRUD BARBARO',
+        tasks,
+        nuevo,
+        ID
     });
 });
 
-// nueva tarea
-routes.post('/nueva-tarea', async (req, res) => {
-    const task = await new Tasks(req.body);
+routes.post('/action', async (req, res) => {
+    const task = new Tasks(req.body);
+    await task.save();
+    res.redirect('/');
+});
+
+routes.post('/action/:id', async (req, res) => {
+    const id = req.params.id;
+    await Tasks.findById(id).update(req.body);
+    res.redirect('/');
+});
+
+routes.get('/cambiar-estado/:id', async (req, res) => {
+    const id = req.params.id;
+    const task = await Tasks.findById(id);
+    task.status = !task.status;
     task.save();
     res.redirect('/');
 });
 
-// confirmar tarea
-routes.get('/confirmar/:id', async (req, res) => {
-    const id = req.params.id;
-    const task = await Tasks.findById(id);
-    task.status = !task.status;
-    await task.save();
-    res.redirect('/'); 
-});
-
-// eliminar tarea
 routes.get('/eliminar/:id', async (req, res) => {
     const id = req.params.id;
-    await Tasks.remove({_id: id});
-    res.redirect('/');
-});
-
-// editar tarea
-routes.get('/editar/:id', async (req, res) => {
-    const id = req.params.id;
-    const task = await Tasks.findById(id);
-    res.render('task', {
-        title: "Editar Tarea",
-        task
-    }); 
-});
-
-routes.post('/modificar/:id', async (req, res) => {
-    const id = req.params.id;
-    const task = await Tasks.findById(id).update(req.body);
+    const task = await Tasks.remove({_id: id});
     res.redirect('/');
 });
 
